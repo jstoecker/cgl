@@ -3,7 +3,7 @@
 
 namespace cgl
 {
-  
+
   class Viewport
   {
   public:
@@ -11,20 +11,20 @@ namespace cgl
     int y;
     int width;
     int height;
-    
+
     Viewport();
     Viewport(int x, int y, int width, int height);
-    
+
     /// Calculates aspect ratio (width / height).
     float aspect() const;
-    
+
     /// Applies the viewport using glViewport().
     void apply() const;
-    
+
     bool operator==(const Viewport&) const;
     bool operator!=(const Viewport&) const;
   };
-  
+
 } // namespace cgl
 
 #endif // CGL_VIEWPORT_H_

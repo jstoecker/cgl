@@ -1,7 +1,7 @@
 #ifndef CGL_CAMERA_H_
 #define CGL_CAMERA_H_
 
-#include "../math/cgl_math.h"
+#include "math/cgl_math.h"
 
 namespace cgl
 {
