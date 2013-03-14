@@ -37,36 +37,36 @@ const Mat4& Camera::projection() const
 
 void Camera::rotateX(float radians)
 {
-  view_ = view_ * Mat4::rotationX(radians);
-  viewInverse_ = Mat4::rotationX(-radians) * viewInverse_;
+  view_ = view_ * rotationX(radians);
+  viewInverse_ = rotationX(-radians) * viewInverse_;
   update();
 }
 
 void Camera::rotateY(float radians)
 {
-  view_ = view_ * Mat4::rotationY(radians);
-  viewInverse_ = Mat4::rotationY(-radians) * viewInverse_;
+  view_ = view_ * rotationY(radians);
+  viewInverse_ = rotationY(-radians) * viewInverse_;
   update();
 }
 
 void Camera::rotateZ(float radians)
 {
-  view_ = view_ * Mat4::rotationZ(radians);
-  viewInverse_ = Mat4::rotationZ(-radians) * viewInverse_;
+  view_ = view_ * rotationZ(radians);
+  viewInverse_ = rotationZ(-radians) * viewInverse_;
   update();
 }
 
 void Camera::rotate(float radians, Vec3 axis)
 {
-  view_ = view_ * Mat4::rotation(radians, axis);
-  viewInverse_ = Mat4::rotation(-radians, axis) * viewInverse_;
+  view_ = view_ * rotation(radians, axis);
+  viewInverse_ = rotation(-radians, axis) * viewInverse_;
   update();
 }
 
 void Camera::translate(float x, float y, float z)
 {
-  view_ = view_ * Mat4::translation(x, y, z);
-  viewInverse_ = Mat4::translation(-x, -y, -z) * viewInverse_;
+  view_ = view_ * translation(x, y, z);
+  viewInverse_ = translation(-x, -y, -z) * viewInverse_;
   update();
 }
 
