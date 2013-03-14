@@ -45,7 +45,7 @@ bool TextRenderer::loadFont(std::string name,
   // pre-multiply alpha
   long pixelin = 0;
   long pixelout = 0;
-  unsigned char buf[bmp.width() * bmp.height() * 4];
+  unsigned char* buf = new unsigned char[bmp.width() * bmp.height() * 4];
   for (unsigned i = 0; i < bmp.width() * bmp.height(); ++i) {
     unsigned char red = bmp.data()[pixelin++];
     unsigned char green = bmp.data()[pixelin++];
@@ -77,6 +77,8 @@ bool TextRenderer::loadFont(std::string name,
   fontTexture->setParameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   fontTexture->setData2D(0, GL_RGBA, bmp.width(), bmp.height(), GL_RGBA,
                         GL_UNSIGNED_BYTE, buf);
+
+  delete[] buf;
   
   textures_.push_back(fontTexture);
   BitmapFont* font = new BitmapFont(*fontTexture, glyphWidths);
