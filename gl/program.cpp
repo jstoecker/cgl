@@ -124,6 +124,12 @@ void Program::unbind() const
   glUseProgram(0);
 }
 
+void Program::bindAttribLocation(const GLchar* name, GLuint index)
+{
+  if (obj_)
+    glBindAttribLocation(obj_->id, index, name);
+}
+
 void Program::release(bool deleteAttached)
 {
   if (obj_) {

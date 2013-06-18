@@ -9,7 +9,7 @@ source_group("" FILES cgl.h)
 install(FILES cgl.h DESTINATION include/cgl)
 
 # gl subdirectory
-file(GLOB SRC_GL gl/*.cc gl/*.h)
+file(GLOB SRC_GL gl/*.cpp gl/*.h)
 source_group("gl" FILES ${SRC_GL} ${INC_GL})
 install(DIRECTORY gl DESTINATION include/cgl FILES_MATCHING PATTERN "*.h")
 
@@ -19,7 +19,7 @@ source_group("math" FILES ${SRC_MATH})
 install(DIRECTORY math DESTINATION include/cgl FILES_MATCHING PATTERN "*.h")
 
 # util subdirectory
-file(GLOB SRC_UTIL util/*.cc util/*.h)
+file(GLOB SRC_UTIL util/*.cpp util/*.h)
 source_group("util" FILES ${SRC_UTIL})
 install(DIRECTORY util DESTINATION include/cgl FILES_MATCHING PATTERN "*.h")
 

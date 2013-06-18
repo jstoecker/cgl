@@ -55,6 +55,10 @@ namespace cgl
     /// Sets the active program to 0.
     void unbind() const;
 
+    /// Assigns the index a vertex attribute will occupy. This must be done
+    /// before the program is linked.
+    void bindAttribLocation(const GLchar* name, GLuint index);
+
     /// Deletes the referenced program from the OpenGL context. If 
     /// deleteAttached is true, all attached shaders will also be deleted.
     void release(bool deleteAttached);
