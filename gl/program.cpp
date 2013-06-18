@@ -124,7 +124,7 @@ void Program::unbind() const
   glUseProgram(0);
 }
 
-void Program::bindAttribLocation(const GLchar* name, GLuint index)
+void Program::bindAttribLocation(GLuint index, const GLchar* name)
 {
   if (obj_)
     glBindAttribLocation(obj_->id, index, name);
