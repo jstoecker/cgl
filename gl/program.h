@@ -2,13 +2,11 @@
 #define CGL_PROGRAM_H_
 
 #include <vector>
-#include <iostream>
 #include "cgl.h"
 
 namespace cgl
 {
   class Shader;
-  class Uniform;
   struct GLProgramObject;
 
   /// GLSL program reference.
@@ -28,14 +26,11 @@ namespace cgl
     /// Returns the info log from failed linking or validating.
     std::string log() const;
 
+    /// Returns a named uniform variable's location or -1 if it is not active.
+    GLint getUniformLocation(const GLchar* name) const;
+
     /// Returns a vector of references to all attached shaders.
     std::vector<Shader> shaders() const;
-
-    /// Returns a reference to a named uniform variable in this program.
-    Uniform uniform(const char* name) const;
-
-    /// Returns references to all the active uniforms in the program.
-    std::vector<Uniform> uniforms() const;
 
     /// Attaches a GLSL shader to the program. If this object does not yet
     /// reference a program, a new one will be created.
@@ -60,11 +55,63 @@ namespace cgl
     /// Sets the active program to 0.
     void unbind() const;
 
-    /// Deletes the referenced program from the OpenGL context. If deleteAttached
-    /// is true, all attached shaders will also be deleted.
-    void glDelete(bool deleteAttached);
+    /// Deletes the referenced program from the OpenGL context. If 
+    /// deleteAttached is true, all attached shaders will also be deleted.
+    void release(bool deleteAttached);
 
-    friend std::ostream& operator<<(std::ostream&, const Program&);
+    /// Sets a uniform variable's using a float.
+    void set(const GLchar*, GLfloat);
+
+    /// Sets a uniform variable's value using two floats.
+    void set(const GLchar*, GLfloat, GLfloat);
+
+    /// Sets a uniform variable's value using two floats.
+    void set(const GLchar*, const Vec2&);
+
+    /// Sets a uniform variable's value using three floats.
+    void set(const GLchar*, GLfloat, GLfloat, GLfloat);
+
+    /// Sets a uniform variable's value using four floats.
+    void set(const GLchar*, const Vec3&);
+
+    /// Sets a uniform variable's value using four floats.
+    void set(const GLchar*, GLfloat, GLfloat, GLfloat, GLfloat);
+
+    /// Sets a uniform variable's value using three floats.
+    void set(const GLchar*, const Vec4&);
+
+    /// Sets a uniform variable array using count 2-tuples of type float.
+    void set2(const GLchar*, GLsizei count, const GLfloat*);
+
+    /// Sets a uniform variable array using count 3-tuples of type float.
+    void set3(const GLchar*, GLsizei count, const GLfloat*);
+
+    /// Sets a uniform variable array using count 4-tuples of type float.
+    void set4(const GLchar*, GLsizei count, const GLfloat*);
+
+    /// Sets a uniform variable's using an integer.
+    void set(const GLchar*, GLint);
+
+    /// Sets a uniform variable's using two integers.
+    void set(const GLchar*, GLint, GLint);
+
+    /// Sets a uniform variable's using three integers.
+    void set(const GLchar*, GLint, GLint, GLint);
+
+    /// Sets a uniform variable's using four integers.
+    void set(const GLchar*, GLint, GLint, GLint, GLint);
+
+    /// Sets a uniform variable array using count 2-tuples of type int.
+    void set2(const GLchar*, GLsizei count, const GLint*);
+
+    /// Sets a uniform variable array using count 2-tuples of type int.
+    void set3(const GLchar*, GLsizei count, const GLint*);
+
+    /// Sets a uniform variable array using count 2-tuples of type int.
+    void set4(const GLchar*, GLsizei count, const GLint*);
+    
+    /// Sets a uniform 4x4 matrix.
+    void set(const GLchar*, const Mat4&);
 
   private:
     GLProgramObject* obj_;

@@ -9,7 +9,7 @@ namespace cgl
   {
     GLuint id;
     std::vector<Shader> shaders;
-    std::map<std::string, Uniform> uniforms;
+    std::map<std::string, GLint> uniforms;
   };
   
   GLProgramObject* getProgramObj(GLuint id)
@@ -20,26 +20,6 @@ namespace cgl
       objects[id] = obj;
     }
     return &objects[id];
-  }
-  
-  std::ostream& operator<<(std::ostream& os, const Program& prog)
-  {
-    GLProgramObject* obj = prog.obj_;
-    if (!obj)
-      return os << "GLSL Program: EMPTY" << std::endl;
-    
-    os << "GLSL Program:" << std::endl;
-    os << "Shaders:" << std::endl;
-    for (unsigned i = 0; i < obj->shaders.size(); ++i)
-      os << "  " << obj->shaders[i] << std::endl;
-    os << "Uniforms:" << std::endl;
-    for (std::map<std::string, Uniform>::iterator it = obj->uniforms.begin();
-         it != obj->uniforms.end();
-         ++it)
-    {
-      os << "  " << it->second << std::endl;
-    }
-    return os;
   }
 }
 
@@ -74,24 +54,11 @@ std::vector<Shader> Program::shaders() const
   return (obj_ ? obj_->shaders : std::vector<Shader>());
 }
 
-Uniform Program::uniform(const char* name) const
+GLint Program::getUniformLocation(const GLchar* name) const
 {
-  return (obj_ ? obj_->uniforms[name] : Uniform());
-}
-
-std::vector<Uniform> Program::uniforms() const
-{
-  if (obj_) {
-    std::vector<Uniform> buf;
-    for (std::map<std::string, Uniform>::iterator it = obj_->uniforms.begin();
-         it != obj_->uniforms.end();
-         ++it)
-    {
-      buf.push_back(it->second);
-    }
-    return buf;
-  }
-  return std::vector<Uniform>();
+  if (!obj_ || obj_->uniforms.find(name) == obj_->uniforms.end())
+    return -1;
+  return obj_->uniforms[name];
 }
 
 void Program::attach(const Shader& shader)
@@ -129,35 +96,10 @@ bool Program::link()
     return false;
   
   glLinkProgram(obj_->id);
+
   GLint status = 0;
   glGetProgramiv(obj_->id, GL_LINK_STATUS, &status);
-  
-  if (!status)
-    return false;
-  
-  obj_->uniforms.clear();
-  GLint numUniforms = 0;
-  glGetProgramiv(obj_->id, GL_ACTIVE_UNIFORMS, &numUniforms);
-
-  if (numUniforms > 0) {
-    GLuint* uniformIDs = new GLuint[numUniforms];
-    GLint bufSize = 0;
-    glGetProgramiv(obj_->id, GL_ACTIVE_UNIFORM_MAX_LENGTH, &bufSize);
-    GLchar* buf = new GLchar[bufSize];
-    
-    for (int i = 0; i < numUniforms; ++i) {
-      GLint size;
-      GLenum type;
-      glGetActiveUniform(obj_->id, i, bufSize, NULL, &size, &type, buf);
-      GLint location = glGetUniformLocation(obj_->id, buf);
-      std::string name = buf;
-      obj_->uniforms[name] = Uniform(obj_->id, location, size, type, name);
-    }
-    delete[] uniformIDs;
-    delete[] buf;
-  }
-  
-  return true;
+  return status;
 }
 
 bool Program::validate() const
@@ -182,7 +124,7 @@ void Program::unbind() const
   glUseProgram(0);
 }
 
-void Program::glDelete(bool deleteAttached)
+void Program::release(bool deleteAttached)
 {
   if (obj_) {
     if (deleteAttached) {
@@ -197,4 +139,94 @@ void Program::glDelete(bool deleteAttached)
     obj_->uniforms.clear();
     obj_ = NULL;
   }
+}
+
+void Program::set(const GLchar* name, GLfloat x)
+{
+  glUniform1f(getUniformLocation(name), x);
+}
+
+void Program::set(const GLchar* name, GLfloat x, GLfloat y)
+{
+  glUniform2f(getUniformLocation(name), x, y);
+}
+
+void Program::set(const GLchar* name, GLfloat x, GLfloat y, GLfloat z)
+{
+  glUniform3f(getUniformLocation(name), x, y, z);
+}
+
+void Program::set(const GLchar* name, GLfloat x, GLfloat y, GLfloat z, GLfloat w)
+{
+  glUniform4f(getUniformLocation(name), x, y, z, w);
+}
+
+void Program::set(const GLchar* name, const Vec2& v)
+{
+  glUniform2f(getUniformLocation(name), v.x, v.y);
+}
+
+void Program::set(const GLchar* name, const Vec3& v)
+{
+  glUniform3f(getUniformLocation(name), v.x, v.y, v.z);
+}
+
+void Program::set(const GLchar* name, const Vec4& v)
+{
+  glUniform4f(getUniformLocation(name), v.x, v.y, v.z, v.w);
+}
+
+void Program::set2(const GLchar* name, GLsizei count, const GLfloat* v)
+{
+  glUniform2fv(getUniformLocation(name), count, v);
+}
+
+void Program::set3(const GLchar* name, GLsizei count, const GLfloat* v)
+{
+  glUniform3fv(getUniformLocation(name), count, v);
+}
+
+void Program::set4(const GLchar* name, GLsizei count, const GLfloat* v)
+{
+  glUniform4fv(getUniformLocation(name), count, v);
+}
+
+void Program::set(const GLchar* name, GLint x)
+{
+  glUniform1i(getUniformLocation(name), x);
+}
+
+void Program::set(const GLchar* name, GLint x, GLint y)
+{
+  glUniform2i(getUniformLocation(name), x, y);
+}
+
+void Program::set(const GLchar* name, GLint x, GLint y, GLint z)
+{
+  glUniform3i(getUniformLocation(name), x, y, z);
+}
+
+void Program::set(const GLchar* name, GLint x, GLint y, GLint z, GLint w)
+{
+  glUniform4i(getUniformLocation(name), x, y, z, w);
+}
+
+void Program::set2(const GLchar* name, GLsizei count, const GLint* v)
+{
+  glUniform2iv(getUniformLocation(name), count, v);
+}
+
+void Program::set3(const GLchar* name, GLsizei count, const GLint* v)
+{
+  glUniform3iv(getUniformLocation(name), count, v);
+}
+
+void Program::set4(const GLchar* name, GLsizei count, const GLint* v)
+{
+  glUniform4iv(getUniformLocation(name), count, v);
+}
+
+void Program::set(const GLchar* name, const Mat4& m)
+{
+  glUniformMatrix4fv(getUniformLocation(name), 1, GL_FALSE, m);
 }
