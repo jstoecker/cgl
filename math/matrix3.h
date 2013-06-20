@@ -7,6 +7,9 @@
 
 namespace cgl
 {
+  template <typename T> class Matrix3;
+  typedef Matrix3<float> Mat3;
+  typedef Matrix3<double> Mat3d;
 
   /// A 3x3 matrix. The values are stored by column first:
   ///

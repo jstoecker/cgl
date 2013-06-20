@@ -7,6 +7,11 @@
 
 namespace cgl
 {
+  template <typename T> class Vector2;
+  template <typename T> class Vector3;
+  template <typename T> class Vector4;
+  typedef Vector2<float> Vec2;
+  typedef Vector2<double> Vec2d;
 
   /// 2D Vector with X and Y components.
   template <typename T> class Vector2 
