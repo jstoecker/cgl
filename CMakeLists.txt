@@ -4,25 +4,28 @@
 cmake_minimum_required(VERSION 2.8)
 project(CGL)
 
-# main directory
+# group source by subdirectory names in any IDE projects
 source_group("" FILES cgl.h)
-install(FILES cgl.h DESTINATION include/cgl)
-
-# gl subdirectory
 file(GLOB SRC_GL gl/*.cpp gl/*.h)
 source_group("gl" FILES ${SRC_GL} ${INC_GL})
-install(DIRECTORY gl DESTINATION include/cgl FILES_MATCHING PATTERN "*.h")
-
-# math subdirectory
 file(GLOB SRC_MATH math/*.h)
 source_group("math" FILES ${SRC_MATH})
-install(DIRECTORY math DESTINATION include/cgl FILES_MATCHING PATTERN "*.h")
-
-# util subdirectory
 file(GLOB SRC_UTIL util/*.cpp util/*.h)
 source_group("util" FILES ${SRC_UTIL})
-install(DIRECTORY util DESTINATION include/cgl FILES_MATCHING PATTERN "*.h")
 
+# add include directories so the headers can be used without subdirectories
 include_directories(.)
-add_library(cgl STATIC cgl.h ${SRC_GL} ${SRC_MATH} ${SRC_UTIL})
+include_directories(gl)
+include_directories(math)
+include_directories(util)
+
+# set output directories when installing (-DCMAKE_INSTALL_PREFIX to set root directory)
+# all the headers will be put into <install_prefix>/include/cgl/
 install(TARGETS cgl DESTINATION lib)
+install(FILES cgl.h DESTINATION include/cgl)
+install(FILES ${SRC_GL} DESTINATION include/cgl FILES_MATCHING PATTERN "*.h")
+install(FILES ${SRC_MATH} DESTINATION include/cgl FILES_MATCHING PATTERN "*.h")
+install(FILES ${SRC_UTIL} DESTINATION include/cgl FILES_MATCHING PATTERN "*.h")
+
+# target is a static library named cgl
+add_library(cgl STATIC cgl.h ${SRC_GL} ${SRC_MATH} ${SRC_UTIL})
